@@ -1,5 +1,4 @@
-FROM nginx:1.21.0
-LABEL maintainer="Jonas Alfredsson <jonas.alfredsson@protonmail.com>"
+FROM owasp/modsecurity-crs:v3.3.2-nginx
 
 ARG BUILDX_QEMU_ENV
 
@@ -49,7 +48,7 @@ RUN set -ex && \
     chown www-data:www-data -R /var/www \
     && \
 # Make sure there are no surprise config files inside the config folder.
-    rm -f /etc/nginx/conf.d/*
+    rm -f /etc/nginx/conf.d/default.conf
 
 # Copy in our "default" Nginx server configurations, which make sure that the
 # ACME challenge requests are correctly forwarded to certbot and then redirects
@@ -58,9 +57,7 @@ COPY nginx_conf.d/ /etc/nginx/conf.d/
 
 # Copy in all our scripts and make them executable.
 COPY scripts/ /scripts
-RUN chmod +x -R /scripts && \
-# Make so that the parent's entrypoint script is properly triggered (issue #21).
-    sed -ri '/^if \[ "\$1" = "nginx" -o "\$1" = "nginx-debug" \]; then$/,${s//if echo "$1" | grep -q "nginx"; then/;b};$q1' /docker-entrypoint.sh
+RUN chmod +x -R /scripts
 
 # Create a volume to have persistent storage for the obtained certificates.
 VOLUME /etc/letsencrypt

@@ -1,3 +1,9 @@
+Forked from https://github.com/JonasAlfredsson/docker-nginx-certbot
+
+Uses [owasp/modsecurity-crs](https://hub.docker.com/r/owasp/modsecurity-crs/) instead of default nginx image
+
+Just edit src/nginx_conf.d/default.conf to suit your needs. Some examples are in the examples folder (or you can just refer to the [official NGINX documentation](http://nginx.org/en/docs/)).
+
 # docker-nginx-certbot
 
 Automatically create and renew website SSL certificates using the
